@@ -89,6 +89,10 @@ class GeneticAlgorithm(object):
             child_2 = parent_2[:index] + parent_1[index:]
             return child_1, child_2
 
+        def copyfn(individual):
+            """Copy a Chromosome object"""
+            return copy.deepcopy(individual)
+
         def mutate(individual):
             """Reverse the bit of a random index in an individual."""
             mutate_index = random.randrange(len(individual))
@@ -116,6 +120,7 @@ class GeneticAlgorithm(object):
         self.create_individual = create_individual
         self.crossover_function = crossover
         self.mutate_function = mutate
+        self.copyfn = copyfn
         self.selection_function = self.tournament_selection
 
     def create_initial_population(self):
@@ -148,12 +153,12 @@ class GeneticAlgorithm(object):
         crossover, and mutation) supplied.
         """
         new_population = []
-        elite = copy.deepcopy(self.current_generation[0])
+        elite = self.copyfn(self.current_generation[0])
         selection = self.selection_function
 
         while len(new_population) < self.population_size:
-            parent_1 = copy.deepcopy(selection(self.current_generation))
-            parent_2 = copy.deepcopy(selection(self.current_generation))
+            parent_1 = self.copyfn(selection(self.current_generation))
+            parent_2 = self.copyfn(selection(self.current_generation))
 
             child_1, child_2 = parent_1, parent_2
             child_1.fitness, child_2.fitness = 0, 0
