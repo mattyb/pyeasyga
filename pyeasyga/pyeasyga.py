@@ -113,6 +113,9 @@ class GeneticAlgorithm(object):
                 key=attrgetter('fitness'), reverse=self.maximise_fitness)
             return members[0]
 
+        def reportfn(generation, population):
+            return
+
         self.fitness_function = None
         self.tournament_selection = tournament_selection
         self.tournament_size = self.population_size // 10
@@ -121,6 +124,7 @@ class GeneticAlgorithm(object):
         self.crossover_function = crossover
         self.mutate_function = mutate
         self.copyfn = copyfn
+        self.reportfn = reportfn
         self.selection_function = self.tournament_selection
 
     def create_initial_population(self):
@@ -203,8 +207,9 @@ class GeneticAlgorithm(object):
         """Run (solve) the Genetic Algorithm."""
         self.create_first_generation()
 
-        for _ in range(1, self.generations):
+        for generation in range(1, self.generations):
             self.create_next_generation()
+            self.reportfn(generation, self.current_generation)
 
     def best_individual(self):
         """Return the individual with the best fitness in the current
